@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/coveragetool/coveragetool.iml" filepath="$PROJECT_DIR$/coveragetool/coveragetool.iml" />
       <module fileurl="file://$PROJECT_DIR$/javaparser-core/javaparser-core.iml" filepath="$PROJECT_DIR$/javaparser-core/javaparser-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/javaparser-core-generators/javaparser-core-generators.iml" filepath="$PROJECT_DIR$/javaparser-core-generators/javaparser-core-generators.iml" />
       <module fileurl="file://$PROJECT_DIR$/javaparser-metamodel-generator/javaparser-metamodel-generator.iml" filepath="$PROJECT_DIR$/javaparser-metamodel-generator/javaparser-metamodel-generator.iml" />
