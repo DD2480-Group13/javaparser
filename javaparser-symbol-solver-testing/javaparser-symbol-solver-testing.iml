@@ -25,6 +25,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:2.6" level="project" />
     <orderEntry type="module" module-name="javaparser-symbol-solver-model" />
     <orderEntry type="module" module-name="javaparser-core" />
+    <orderEntry type="module" module-name="coveragetool" />
     <orderEntry type="module" module-name="javaparser-symbol-solver-core" />
   </component>
 </module>
