@@ -16,7 +16,7 @@
         <module name="javaparser-testing" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="javaparser-core" target="1.8" />
       <module name="javaparser-core-generators" target="1.8" />
       <module name="javaparser-metamodel-generator" target="1.8" />
