@@ -12,6 +12,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:1.+" level="project" />
     <orderEntry type="module" module-name="javaparser-core" scope="TEST" />
+    <orderEntry type="module" module-name="coveragetool" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apiguardian:apiguardian-api:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.opentest4j:opentest4j:1.0.0" level="project" />
