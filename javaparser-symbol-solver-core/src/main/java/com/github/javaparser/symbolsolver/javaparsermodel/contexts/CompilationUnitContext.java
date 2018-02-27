@@ -25,6 +25,7 @@ import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.Name;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.coveragetool.CoverageTool;
 import com.github.javaparser.resolution.declarations.ResolvedMethodDeclaration;
 import com.github.javaparser.resolution.declarations.ResolvedReferenceTypeDeclaration;
 import com.github.javaparser.resolution.declarations.ResolvedTypeDeclaration;
@@ -113,16 +114,24 @@ public class CompilationUnitContext extends AbstractJavaParserContext<Compilatio
 
     @Override
     public SymbolReference<ResolvedTypeDeclaration> solveType(String name, TypeSolver typeSolver) {
+        CoverageTool.makeCovered("solveType 1");
         if (wrappedNode.getTypes() != null) {
+            CoverageTool.makeCovered("solveType 2");
             for (TypeDeclaration<?> type : wrappedNode.getTypes()) {
+                CoverageTool.makeCovered("solveType 3");
                 if (type.getName().getId().equals(name)) {
+                    CoverageTool.makeCovered("solveType 4");
                     if (type instanceof ClassOrInterfaceDeclaration) {
+                        CoverageTool.makeCovered("solveType 5");
                         return SymbolReference.solved(JavaParserFacade.get(typeSolver).getTypeDeclaration((ClassOrInterfaceDeclaration) type));
                     } else if (type instanceof AnnotationDeclaration) {
+                        CoverageTool.makeCovered("solveType 6");
                         return SymbolReference.solved(new JavaParserAnnotationDeclaration((AnnotationDeclaration) type, typeSolver));
                     } else if (type instanceof EnumDeclaration) {
+                        CoverageTool.makeCovered("solveType 7");
                         return SymbolReference.solved(new JavaParserEnumDeclaration((EnumDeclaration) type, typeSolver));
                     } else {
+                        CoverageTool.makeCovered("solveType 8");
                         throw new UnsupportedOperationException(type.getClass().getCanonicalName());
                     }
                 }
@@ -130,28 +139,37 @@ public class CompilationUnitContext extends AbstractJavaParserContext<Compilatio
         }
 
         if (wrappedNode.getImports() != null) {
+            CoverageTool.makeCovered("solveType 9");
             int dotPos = name.indexOf('.');
             String prefix = null;
             if (dotPos > -1) {
+                CoverageTool.makeCovered("solveType 10");
                 prefix = name.substring(0, dotPos);
             }
             // look into type imports
             for (ImportDeclaration importDecl : wrappedNode.getImports()) {
+                CoverageTool.makeCovered("solveType 11");
                 if (!importDecl.isAsterisk()) {
+                    CoverageTool.makeCovered("solveType 12");
                     String qName = importDecl.getNameAsString();
                     boolean defaultPackage = !importDecl.getName().getQualifier().isPresent();
                     boolean found = !defaultPackage && importDecl.getName().getIdentifier().equals(name);
                     if (!found) {
+                        CoverageTool.makeCovered("solveType 13");
                         if (prefix != null) {
+                            CoverageTool.makeCovered("solveType 14");
                             found = qName.endsWith("." + prefix);
                             if (found) {
+                                CoverageTool.makeCovered("solveType 15");
                                 qName = qName + name.substring(dotPos);
                             }
                         }
                     }
                     if (found) {
+                        CoverageTool.makeCovered("solveType 16");
                         SymbolReference<ResolvedReferenceTypeDeclaration> ref = typeSolver.tryToSolveType(qName);
                         if (ref.isSolved()) {
+                            CoverageTool.makeCovered("solveType 17");
                             return SymbolReference.adapt(ref, ResolvedTypeDeclaration.class);
                         }
                     }
@@ -159,10 +177,13 @@ public class CompilationUnitContext extends AbstractJavaParserContext<Compilatio
             }
             // look into type imports on demand
             for (ImportDeclaration importDecl : wrappedNode.getImports()) {
+                CoverageTool.makeCovered("solveType 18");
                 if (importDecl.isAsterisk()) {
+                    CoverageTool.makeCovered("solveType 19");
                     String qName = importDecl.getNameAsString() + "." + name;
                     SymbolReference<ResolvedReferenceTypeDeclaration> ref = typeSolver.tryToSolveType(qName);
                     if (ref.isSolved()) {
+                        CoverageTool.makeCovered("solveType 20");
                         return SymbolReference.adapt(ref, ResolvedTypeDeclaration.class);
                     }
                 }
@@ -171,16 +192,20 @@ public class CompilationUnitContext extends AbstractJavaParserContext<Compilatio
 
         // Look in current package
         if (this.wrappedNode.getPackageDeclaration().isPresent()) {
+            CoverageTool.makeCovered("solveType 21");
             String qName = this.wrappedNode.getPackageDeclaration().get().getName().toString() + "." + name;
             SymbolReference<ResolvedReferenceTypeDeclaration> ref = typeSolver.tryToSolveType(qName);
             if (ref.isSolved()) {
+                CoverageTool.makeCovered("solveType 22");
                 return SymbolReference.adapt(ref, ResolvedTypeDeclaration.class);
             }
         } else {
+            CoverageTool.makeCovered("solveType 23");
             // look for classes in the default package
             String qName = name;
             SymbolReference<ResolvedReferenceTypeDeclaration> ref = typeSolver.tryToSolveType(qName);
             if (ref.isSolved()) {
+                CoverageTool.makeCovered("solveType 24");
                 return SymbolReference.adapt(ref, ResolvedTypeDeclaration.class);
             }
         }
@@ -188,13 +213,16 @@ public class CompilationUnitContext extends AbstractJavaParserContext<Compilatio
         // Look in the java.lang package
         SymbolReference<ResolvedReferenceTypeDeclaration> ref = typeSolver.tryToSolveType("java.lang." + name);
         if (ref.isSolved()) {
+            CoverageTool.makeCovered("solveType 25");
             return SymbolReference.adapt(ref, ResolvedTypeDeclaration.class);
         }
 
         // DO NOT look for absolute name if this name is not qualified: you cannot import classes from the default package
         if (isQualifiedName(name)) {
+            CoverageTool.makeCovered("solveType 26");
             return SymbolReference.adapt(typeSolver.tryToSolveType(name), ResolvedTypeDeclaration.class);
         } else {
+            CoverageTool.makeCovered("solveType 27");
             return SymbolReference.unsolved(ResolvedReferenceTypeDeclaration.class);
         }
     }
