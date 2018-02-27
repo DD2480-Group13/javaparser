@@ -24,6 +24,7 @@ import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.ExplicitConstructorInvocationStmt;
 import com.github.javaparser.ast.type.*;
+import com.github.javaparser.coveragetool.CoverageTool;
 import com.github.javaparser.resolution.MethodUsage;
 import com.github.javaparser.resolution.UnsolvedSymbolException;
 import com.github.javaparser.resolution.declarations.*;
@@ -428,61 +429,82 @@ public class JavaParserFacade {
 
     protected ResolvedType convertToUsage(com.github.javaparser.ast.type.Type type, Context context) {
         if (context == null) {
+            CoverageTool.makeCovered("JavaParserFacade 1");
             throw new NullPointerException("Context should not be null");
         }
         if (type instanceof ClassOrInterfaceType) {
+            CoverageTool.makeCovered("JavaParserFacade 2");
             ClassOrInterfaceType classOrInterfaceType = (ClassOrInterfaceType) type;
             String name = qName(classOrInterfaceType);
             SymbolReference<ResolvedTypeDeclaration> ref = context.solveType(name, typeSolver);
             if (!ref.isSolved()) {
+                CoverageTool.makeCovered("JavaParserFacade 3");
                 throw new UnsolvedSymbolException(name);
             }
             ResolvedTypeDeclaration typeDeclaration = ref.getCorrespondingDeclaration();
             List<ResolvedType> typeParameters = Collections.emptyList();
             if (classOrInterfaceType.getTypeArguments().isPresent()) {
+                CoverageTool.makeCovered("JavaParserFacade 4");
                 typeParameters = classOrInterfaceType.getTypeArguments().get().stream().map((pt) -> convertToUsage(pt, context)).collect(Collectors.toList());
             }
             if (typeDeclaration.isTypeParameter()) {
+                CoverageTool.makeCovered("JavaParserFacade 5");
                 if (typeDeclaration instanceof ResolvedTypeParameterDeclaration) {
+                    CoverageTool.makeCovered("JavaParserFacade 6");
                     return new ResolvedTypeVariable((ResolvedTypeParameterDeclaration) typeDeclaration);
                 } else {
+                    CoverageTool.makeCovered("JavaParserFacade 7");
                     JavaParserTypeVariableDeclaration javaParserTypeVariableDeclaration = (JavaParserTypeVariableDeclaration) typeDeclaration;
                     return new ResolvedTypeVariable(javaParserTypeVariableDeclaration.asTypeParameter());
                 }
             } else {
+                CoverageTool.makeCovered("JavaParserFacade 8");
                 return new ReferenceTypeImpl((ResolvedReferenceTypeDeclaration) typeDeclaration, typeParameters, typeSolver);
             }
         } else if (type instanceof com.github.javaparser.ast.type.PrimitiveType) {
+            CoverageTool.makeCovered("JavaParserFacade 10");
             return ResolvedPrimitiveType.byName(((com.github.javaparser.ast.type.PrimitiveType) type).getType().name());
         } else if (type instanceof WildcardType) {
+            CoverageTool.makeCovered("JavaParserFacade 11");
             WildcardType wildcardType = (WildcardType) type;
             if (wildcardType.getExtendedType().isPresent() && !wildcardType.getSuperType().isPresent()) {
+                CoverageTool.makeCovered("JavaParserFacade 12");
                 return ResolvedWildcard.extendsBound(convertToUsage(wildcardType.getExtendedType().get(), context)); // removed (ReferenceTypeImpl)
             } else if (!wildcardType.getExtendedType().isPresent() && wildcardType.getSuperType().isPresent()) {
+                CoverageTool.makeCovered("JavaParserFacade 13");
                 return ResolvedWildcard.superBound(convertToUsage(wildcardType.getSuperType().get(), context)); // removed (ReferenceTypeImpl)
             } else if (!wildcardType.getExtendedType().isPresent() && !wildcardType.getSuperType().isPresent()) {
+                CoverageTool.makeCovered("JavaParserFacade 14");
                 return ResolvedWildcard.UNBOUNDED;
             } else {
+                CoverageTool.makeCovered("JavaParserFacade 15");
                 throw new UnsupportedOperationException(wildcardType.toString());
             }
         } else if (type instanceof com.github.javaparser.ast.type.VoidType) {
+            CoverageTool.makeCovered("JavaParserFacade 16");
             return ResolvedVoidType.INSTANCE;
         } else if (type instanceof com.github.javaparser.ast.type.ArrayType) {
+            CoverageTool.makeCovered("JavaParserFacade 17");
             com.github.javaparser.ast.type.ArrayType jpArrayType = (com.github.javaparser.ast.type.ArrayType) type;
             return new ResolvedArrayType(convertToUsage(jpArrayType.getComponentType(), context));
         } else if (type instanceof UnionType) {
+            CoverageTool.makeCovered("JavaParserFacade 18");
             UnionType unionType = (UnionType) type;
             return new ResolvedUnionType(unionType.getElements().stream().map(el -> convertToUsage(el, context)).collect(Collectors.toList()));
         } else if (type instanceof VarType) {
+            CoverageTool.makeCovered("JavaParserFacade 19");
             Node parent = type.getParentNode().get();
             if (!(parent instanceof VariableDeclarator)) {
+                CoverageTool.makeCovered("JavaParserFacade 20");
                 throw new IllegalStateException("Trying to resolve a `var` which is not in a variable declaration.");
             }
+            CoverageTool.makeCovered("JavaParserFacade 21");
             final VariableDeclarator variableDeclarator = (VariableDeclarator) parent;
             return variableDeclarator.getInitializer()
                     .map(Expression::calculateResolvedType)
                     .orElseThrow(() -> new IllegalStateException("Cannot resolve `var` which has no initializer."));
         } else {
+            CoverageTool.makeCovered("JavaParserFacade 22");
             throw new UnsupportedOperationException(type.getClass().getCanonicalName());
         }
     }
