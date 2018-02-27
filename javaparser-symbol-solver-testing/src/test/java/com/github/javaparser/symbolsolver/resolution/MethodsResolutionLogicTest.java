@@ -22,9 +22,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.resolution.MethodUsage;
 import com.github.javaparser.resolution.declarations.ResolvedMethodDeclaration;
-import com.github.javaparser.resolution.declarations.ResolvedTypeDeclaration;
 import com.github.javaparser.resolution.types.ResolvedReferenceType;
-import com.github.javaparser.resolution.types.ResolvedType;
 import com.github.javaparser.symbolsolver.javaparser.Navigator;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserClassDeclaration;
@@ -37,8 +35,9 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeS
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
-import java.io.File;
+import java.io.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -123,6 +122,35 @@ public class MethodsResolutionLogicTest extends AbstractResolutionTest {
 
         // Validates that branch of isApplicable method in question
         assertEquals(false, MethodResolutionLogic.isApplicable(typeDecl, "isThrows", ImmutableList.of(rawClassType), typeSolver));
+
+    }
+
+    /**
+     * Code reaching this is found in AnalyseNewJavaParserTest.parseAllOtherNodes, and  parseModifier
+     * Test case reaching if (pos > argumentsTypes.size()) condition in MethodResolutionLogic.java :: isApplicable(ResolvedMethodDeclaration method,...)
+     * This is done using mocked objects, as all examples found on how to construct objects reaching this code are found in tests such as
+     * AnalyseNewJavaParserTest.parseAllOtherNodes, and  parseModifier, which parses actual files and therefore gets quite complicated.
+     *
+     * The conditions required to be met in order to reach the tested condition is;
+     *  1) the methods name is equal to the name parameter.
+     *  2) method returns true for method.hasVariadicParameter()
+     *  3) method.getNumberOfParams is not equal to argumentsTypes.size(), which is the third parameter, List<ResolvedType>
+     *  4) method.getNumberOfParams() - 1 must be bigger than argumentsTypes.size().
+     *  If all these are fulfilled, the method should return false.
+     *
+     * Branch coverage before: ??
+     * Branch coverage after: ??
+     */
+    @Test
+    public void variadicParametersPosBiggerThanArgumentTypesReturnsFalse() {
+        ResolvedReferenceType rawClassType = (ResolvedReferenceType) ReflectionFactory.typeUsageFor(Class.class, typeSolver);
+        String name = "isThrows";
+        ResolvedMethodDeclaration mocked_method = Mockito.mock(ResolvedMethodDeclaration.class);
+        Mockito.when(mocked_method.getName()).thenReturn(name);
+        Mockito.when(mocked_method.hasVariadicParameter()).thenReturn(true);
+        Mockito.when(mocked_method.getNumberOfParams()).thenReturn(5);
+
+        assertEquals(false, MethodResolutionLogic.isApplicable(mocked_method, name, ImmutableList.of(rawClassType), typeSolver));
 
     }
 }
