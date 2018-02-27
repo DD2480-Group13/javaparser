@@ -23,7 +23,7 @@ public class CoverageTool {
     }
 
     public static void makeCovered(String id) {
-        System.out.println(id);
+        //System.out.println(id);
         coverage.put(id, true);
     }
 
@@ -31,8 +31,8 @@ public class CoverageTool {
         String[] keys = new String[coverage.size()];
         keys = coverage.keySet().toArray(keys);
         FileWriter writer = new FileWriter(outFile);
-        for(String str: keys) {
-            writer.write(str);
+        for(int i=0; i < keys.length; i++) {
+            writer.write((i+1) + ": " + keys[i] + "\n");
         }
         writer.close();
     }
