@@ -134,95 +134,123 @@ public class CompilationUnitContext extends AbstractJavaParserContext<Compilatio
                         CoverageTool.makeCovered("solveType 8");
                         throw new UnsupportedOperationException(type.getClass().getCanonicalName());
                     }
+                } else {
+                    CoverageTool.makeCovered("solveType 9");
                 }
             }
+        } else {
+            CoverageTool.makeCovered("solveType 10");
         }
 
         if (wrappedNode.getImports() != null) {
-            CoverageTool.makeCovered("solveType 9");
+            CoverageTool.makeCovered("solveType 11");
             int dotPos = name.indexOf('.');
             String prefix = null;
             if (dotPos > -1) {
-                CoverageTool.makeCovered("solveType 10");
+                CoverageTool.makeCovered("solveType 12");
                 prefix = name.substring(0, dotPos);
+            } else {
+                CoverageTool.makeCovered("solveType 13");
             }
             // look into type imports
             for (ImportDeclaration importDecl : wrappedNode.getImports()) {
-                CoverageTool.makeCovered("solveType 11");
+                CoverageTool.makeCovered("solveType 14");
                 if (!importDecl.isAsterisk()) {
-                    CoverageTool.makeCovered("solveType 12");
+                    CoverageTool.makeCovered("solveType 15");
                     String qName = importDecl.getNameAsString();
                     boolean defaultPackage = !importDecl.getName().getQualifier().isPresent();
                     boolean found = !defaultPackage && importDecl.getName().getIdentifier().equals(name);
                     if (!found) {
-                        CoverageTool.makeCovered("solveType 13");
+                        CoverageTool.makeCovered("solveType 16");
                         if (prefix != null) {
-                            CoverageTool.makeCovered("solveType 14");
+                            CoverageTool.makeCovered("solveType 17");
                             found = qName.endsWith("." + prefix);
                             if (found) {
-                                CoverageTool.makeCovered("solveType 15");
+                                CoverageTool.makeCovered("solveType 18");
                                 qName = qName + name.substring(dotPos);
+                            } else {
+                                CoverageTool.makeCovered("solveType 19");
                             }
+                        } else {
+                            CoverageTool.makeCovered("solveType 20");
                         }
+                    } else {
+                        CoverageTool.makeCovered("solveType 21");
                     }
                     if (found) {
-                        CoverageTool.makeCovered("solveType 16");
+                        CoverageTool.makeCovered("solveType 22");
                         SymbolReference<ResolvedReferenceTypeDeclaration> ref = typeSolver.tryToSolveType(qName);
                         if (ref.isSolved()) {
-                            CoverageTool.makeCovered("solveType 17");
+                            CoverageTool.makeCovered("solveType 23");
                             return SymbolReference.adapt(ref, ResolvedTypeDeclaration.class);
+                        } else {
+                            CoverageTool.makeCovered("solveType 24");
                         }
+                    } else {
+                        CoverageTool.makeCovered("solveType 25");
                     }
+                } else {
+                    CoverageTool.makeCovered("solveType 26");
                 }
             }
             // look into type imports on demand
             for (ImportDeclaration importDecl : wrappedNode.getImports()) {
-                CoverageTool.makeCovered("solveType 18");
+                CoverageTool.makeCovered("solveType 27");
                 if (importDecl.isAsterisk()) {
-                    CoverageTool.makeCovered("solveType 19");
+                    CoverageTool.makeCovered("solveType 28");
                     String qName = importDecl.getNameAsString() + "." + name;
                     SymbolReference<ResolvedReferenceTypeDeclaration> ref = typeSolver.tryToSolveType(qName);
                     if (ref.isSolved()) {
-                        CoverageTool.makeCovered("solveType 20");
+                        CoverageTool.makeCovered("solveType 29");
                         return SymbolReference.adapt(ref, ResolvedTypeDeclaration.class);
+                    } else {
+                        CoverageTool.makeCovered("solveType 30");
                     }
+                } else {
+                    CoverageTool.makeCovered("solveType 31");
                 }
             }
         }
 
         // Look in current package
         if (this.wrappedNode.getPackageDeclaration().isPresent()) {
-            CoverageTool.makeCovered("solveType 21");
+            CoverageTool.makeCovered("solveType 32");
             String qName = this.wrappedNode.getPackageDeclaration().get().getName().toString() + "." + name;
             SymbolReference<ResolvedReferenceTypeDeclaration> ref = typeSolver.tryToSolveType(qName);
             if (ref.isSolved()) {
-                CoverageTool.makeCovered("solveType 22");
+                CoverageTool.makeCovered("solveType 33");
                 return SymbolReference.adapt(ref, ResolvedTypeDeclaration.class);
+            } else {
+                CoverageTool.makeCovered("solveType 34");
             }
         } else {
-            CoverageTool.makeCovered("solveType 23");
+            CoverageTool.makeCovered("solveType 35");
             // look for classes in the default package
             String qName = name;
             SymbolReference<ResolvedReferenceTypeDeclaration> ref = typeSolver.tryToSolveType(qName);
             if (ref.isSolved()) {
-                CoverageTool.makeCovered("solveType 24");
+                CoverageTool.makeCovered("solveType 36");
                 return SymbolReference.adapt(ref, ResolvedTypeDeclaration.class);
+            } else {
+                CoverageTool.makeCovered("solveType 37");
             }
         }
 
         // Look in the java.lang package
         SymbolReference<ResolvedReferenceTypeDeclaration> ref = typeSolver.tryToSolveType("java.lang." + name);
         if (ref.isSolved()) {
-            CoverageTool.makeCovered("solveType 25");
+            CoverageTool.makeCovered("solveType 38");
             return SymbolReference.adapt(ref, ResolvedTypeDeclaration.class);
+        } else {
+            CoverageTool.makeCovered("solveType 39");
         }
 
         // DO NOT look for absolute name if this name is not qualified: you cannot import classes from the default package
         if (isQualifiedName(name)) {
-            CoverageTool.makeCovered("solveType 26");
+            CoverageTool.makeCovered("solveType 40");
             return SymbolReference.adapt(typeSolver.tryToSolveType(name), ResolvedTypeDeclaration.class);
         } else {
-            CoverageTool.makeCovered("solveType 27");
+            CoverageTool.makeCovered("solveType 41");
             return SymbolReference.unsolved(ResolvedReferenceTypeDeclaration.class);
         }
     }
