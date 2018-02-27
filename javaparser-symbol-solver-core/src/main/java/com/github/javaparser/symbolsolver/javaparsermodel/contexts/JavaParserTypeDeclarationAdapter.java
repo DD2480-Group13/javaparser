@@ -3,6 +3,7 @@ package com.github.javaparser.symbolsolver.javaparsermodel.contexts;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.nodeTypes.NodeWithTypeParameters;
 import com.github.javaparser.ast.type.TypeParameter;
+import com.github.javaparser.coveragetool.CoverageTool;
 import com.github.javaparser.resolution.declarations.*;
 import com.github.javaparser.resolution.types.ResolvedReferenceType;
 import com.github.javaparser.resolution.types.ResolvedType;
@@ -22,7 +23,8 @@ import java.util.stream.Collectors;
 /**
  * @author Federico Tomassetti
  */
-public class JavaParserTypeDeclarationAdapter {
+public class
+JavaParserTypeDeclarationAdapter {
 
     private com.github.javaparser.ast.body.TypeDeclaration<?> wrappedNode;
     private TypeSolver typeSolver;
@@ -39,47 +41,72 @@ public class JavaParserTypeDeclarationAdapter {
     }
 
     public SymbolReference<ResolvedTypeDeclaration> solveType(String name, TypeSolver typeSolver) {
+        CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 0");
         if (this.wrappedNode.getName().getId().equals(name)) {
+            CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 1");
             return SymbolReference.solved(JavaParserFacade.get(typeSolver).getTypeDeclaration(wrappedNode));
+        } else {
+            CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 2");
         }
-
         // Internal classes
         for (BodyDeclaration<?> member : this.wrappedNode.getMembers()) {
+            CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 3");
             if (member instanceof com.github.javaparser.ast.body.TypeDeclaration) {
+                CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 4");
                 com.github.javaparser.ast.body.TypeDeclaration<?> internalType = (com.github.javaparser.ast.body.TypeDeclaration<?>) member;
                 if (internalType.getName().getId().equals(name)) {
+                    CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 5");
                     return SymbolReference.solved(JavaParserFacade.get(typeSolver).getTypeDeclaration(internalType));
                 } else if (name.startsWith(String.format("%s.%s", wrappedNode.getName(), internalType.getName()))) {
+                    CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 6");
                     return JavaParserFactory.getContext(internalType, typeSolver).solveType(name.substring(wrappedNode.getName().getId().length() + 1), typeSolver);
                 } else if (name.startsWith(String.format("%s.", internalType.getName()))) {
+                    CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 7");
                     return JavaParserFactory.getContext(internalType, typeSolver).solveType(name.substring(internalType.getName().getId().length() + 1), typeSolver);
+                } else {
+                    CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 8");
                 }
+            } else {
+                CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 9");
             }
         }
 
         if (wrappedNode instanceof NodeWithTypeParameters) {
+            CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 10");
             NodeWithTypeParameters<?> nodeWithTypeParameters = (NodeWithTypeParameters<?>) wrappedNode;
             for (TypeParameter astTpRaw : nodeWithTypeParameters.getTypeParameters()) {
+                CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 11");
                 TypeParameter astTp = astTpRaw;
                 if (astTp.getName().getId().equals(name)) {
+                    CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 12");
                     return SymbolReference.solved(new JavaParserTypeParameter(astTp, typeSolver));
+                } else {
+                    CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 13");
                 }
             }
+        } else {
+            CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 14");
         }
 
         // Look into extended classes and implemented interfaces
         for (ResolvedReferenceType ancestor : this.typeDeclaration.getAncestors()) {
+            CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 15");
         	try {
 	            for (ResolvedTypeDeclaration internalTypeDeclaration : ancestor.getTypeDeclaration().internalTypes()) {
+                    CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 16");
 	                if (internalTypeDeclaration.getName().equals(name)) {
+                        CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 17");
 	                    return SymbolReference.solved(internalTypeDeclaration);
-	                }
+	                } else {
+                        CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 18");
+                    }
 	            }
         	} catch (UnsupportedOperationException e) {
+                CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 19");
 	            // just continue using the next ancestor
             }
         }
-
+        CoverageTool.makeCovered("JavaParserTypeDeclarationAdapter.solveType 20");
         return context.getParent().solveType(name, typeSolver);
     }
 
