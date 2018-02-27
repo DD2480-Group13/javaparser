@@ -1048,4 +1048,18 @@ public class LexicalPreservingPrinterTest extends AbstractLexicalPreservingTest 
         LexicalPreservingPrinter.setup(cu);
         cu.accept(new CallModifierVisitor(), null);
     }
+
+    /**
+     * Covers the first return branch for createObserver.
+     * Makes checks so that the returned cu has not been changed at all, indiciating a return has occured.
+     * @throws IOException
+     */
+    @Test
+    public void createObserverCoverFirstReturn() throws IOException {
+        considerExample("ASimpleClassWithMoreFormatting");
+
+        cu.getClassByName("ASimpleClass").get()
+                .setName("ASimpleClass");
+        assertEquals(readExample("ASimpleClassWithMoreFormatting"), LexicalPreservingPrinter.print(cu));
+    }
 }
