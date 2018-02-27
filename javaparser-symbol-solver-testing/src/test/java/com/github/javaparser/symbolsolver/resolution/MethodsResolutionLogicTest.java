@@ -18,6 +18,8 @@ package com.github.javaparser.symbolsolver.resolution;
 
 import com.github.javaparser.resolution.MethodUsage;
 import com.github.javaparser.resolution.types.ResolvedReferenceType;
+import com.github.javaparser.symbolsolver.core.resolution.Context;
+import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserClassDeclaration;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
 import com.github.javaparser.symbolsolver.reflectionmodel.ReflectionFactory;
@@ -26,9 +28,15 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeS
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -79,5 +87,34 @@ public class MethodsResolutionLogicTest extends AbstractResolutionTest {
         MethodUsage mu = constructorDeclaration.getAllMethods().stream().filter(m -> m.getDeclaration().getSignature().equals("isThrows(java.lang.Class<? extends java.lang.Throwable>)")).findFirst().get();
 
         assertEquals(true, MethodResolutionLogic.isApplicable(mu, "isThrows", ImmutableList.of(classOfRuntimeType), typeSolver));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void unsupportedOperationException() throws Throwable {
+
+        Class[] args = new Class[1];
+        args[0] = ResolvedReferenceType.class;
+
+        Method method = ResolvedReferenceType.class.getDeclaredMethod("compareConsideringTypeParameters", args);
+        method.setAccessible(true);
+
+        String mock = "mock";
+
+        ResolvedReferenceType resolved1 = Mockito.mock(ResolvedReferenceType.class);
+        Mockito.when(resolved1.getQualifiedName()).thenReturn(mock);
+        Mockito.when(resolved1.compareConsideringTypeParameters(Mockito.any(ResolvedReferenceType.class))).thenCallRealMethod();
+
+        List mockList1 = Mockito.mock(ArrayList.class);
+        Mockito.when(mockList1.size()).thenReturn((Integer)9);
+        Mockito.when(resolved1.typeParametersValues()).thenReturn(mockList1);
+
+        ResolvedReferenceType resolved2 = Mockito.mock(ResolvedReferenceType.class);
+        Mockito.when(resolved2.getQualifiedName()).thenReturn(mock);
+
+        List mockList2 = Mockito.mock(ArrayList.class);
+        Mockito.when(mockList2.size()).thenReturn((Integer)10);
+        Mockito.when(resolved2.typeParametersValues()).thenReturn(mockList2);
+
+        resolved1.compareConsideringTypeParameters(resolved2);
     }
 }
