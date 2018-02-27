@@ -37,7 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.io.*;
+import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 
