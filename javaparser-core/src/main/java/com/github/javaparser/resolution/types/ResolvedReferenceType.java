@@ -446,12 +446,15 @@ public abstract class ResolvedReferenceType implements ResolvedType,
                                 return true;
                             }
                         }
+                        CoverageTool.makeCovered("ResolvedReferenceType 16");
                         return false;
                     }
                 }
             }
+            CoverageTool.makeCovered("ResolvedReferenceType 17");
             return true;
         }
+        CoverageTool.makeCovered("ResolvedReferenceType 18");
         return false;
     }
 
