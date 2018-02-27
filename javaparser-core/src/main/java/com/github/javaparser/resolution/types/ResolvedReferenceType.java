@@ -412,14 +412,7 @@ public abstract class ResolvedReferenceType implements ResolvedType,
                 ResolvedType otherParam = other.typeParametersValues().get(i);
                 if (!thisParam.equals(otherParam)) {
                     if (thisParam instanceof ResolvedWildcard) {
-                        ResolvedWildcard thisParamAsWildcard = (ResolvedWildcard) thisParam;
-                        if (thisParamAsWildcard.isSuper() && otherParam.isAssignableBy(thisParamAsWildcard.getBoundedType())) {
-                            // ok
-                        } else if (thisParamAsWildcard.isExtends() && thisParamAsWildcard.getBoundedType().isAssignableBy(otherParam)) {
-                            // ok
-                        } else if (!thisParamAsWildcard.isBounded()) {
-                            // ok
-                        } else {
+                        if (!checkResolvedWildCard((ResolvedWildcard) thisParam, otherParam)){
                             return false;
                         }
                     } else {
@@ -437,6 +430,10 @@ public abstract class ResolvedReferenceType implements ResolvedType,
             return true;
         }
         return false;
+    }
+
+    private boolean checkResolvedWildCard(ResolvedWildcard wildcard, ResolvedType type){
+        return wildcard.isSuper() && type.isAssignableBy(wildcard.getBoundedType()) || wildcard.isExtends() && wildcard.getBoundedType().isAssignableBy(type) || !wildcard.isBounded();
     }
 
     //
