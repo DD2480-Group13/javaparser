@@ -98,8 +98,8 @@ public class MethodsResolutionLogicTest extends AbstractResolutionTest {
      * The return statement in question checks that parameter method.getName() is equal to parameter name, else simply returns false.
      * Method coverage before: 91,3%
      * Method coverage after: 95.7%
-     * Branch coverage before: ??
-     * Branch coverage after: ??
+     * Branch coverage before: 12/18 = 66.6%
+     * Branch coverage after: 13/18 = 72.2%
      */
     @Test
     public void differingMethodNamesReturnsFalse() {
@@ -138,8 +138,8 @@ public class MethodsResolutionLogicTest extends AbstractResolutionTest {
      *  4) method.getNumberOfParams() - 1 must be bigger than argumentsTypes.size().
      *  If all these are fulfilled, the method should return false.
      *
-     * Branch coverage before: ??
-     * Branch coverage after: ??
+     * Branch coverage before: 13/18 = 72.2%
+     * Branch coverage after: 13/18 = 77.8%
      */
     @Test
     public void variadicParametersPosBiggerThanArgumentTypesReturnsFalse() {
