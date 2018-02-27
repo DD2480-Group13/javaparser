@@ -24,6 +24,7 @@ package com.github.javaparser.printer.concretesyntaxmodel;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.observer.ObservableProperty;
+import com.github.javaparser.coveragetool.CoverageTool;
 import com.github.javaparser.printer.ConcreteSyntaxModel;
 import com.github.javaparser.printer.SourcePrinter;
 
@@ -76,43 +77,60 @@ public class CsmList implements CsmElement {
     @Override
     public void prettyPrint(Node node, SourcePrinter printer) {
         if (property.isAboutNodes()) {
+            CoverageTool.makeCovered("CsmList 1");
             NodeList nodeList = property.getValueAsMultipleReference(node);
             if (nodeList == null) {
+                CoverageTool.makeCovered("CsmList 2");
                 return;
             }
+            CoverageTool.makeCovered("CsmList 3");
             if (!nodeList.isEmpty() && preceeding != null) {
+                CoverageTool.makeCovered("CsmList 4");
                 preceeding.prettyPrint(node, printer);
             }
+            CoverageTool.makeCovered("CsmList 5");
             for (int i = 0; i < nodeList.size(); i++) {
+                CoverageTool.makeCovered("CsmList 6");
                 if (separatorPre != null && i != 0) {
+                    CoverageTool.makeCovered("CsmList 7");
                     separatorPre.prettyPrint(node, printer);
                 }
                 ConcreteSyntaxModel.genericPrettyPrint(nodeList.get(i), printer);
                 if (separatorPost != null && i != (nodeList.size() - 1)) {
+                    CoverageTool.makeCovered("CsmList 8");
                     separatorPost.prettyPrint(node, printer);
                 }
             }
             if (!nodeList.isEmpty() && following != null) {
+                CoverageTool.makeCovered("CsmList 9");
                 following.prettyPrint(node, printer);
             }
         } else {
+            CoverageTool.makeCovered("CsmList 10");
             Collection<?> values = property.getValueAsCollection(node);
             if (values == null) {
+                CoverageTool.makeCovered("CsmList 11");
                 return;
             }
+            CoverageTool.makeCovered("CsmList 12");
             if (!values.isEmpty() && preceeding != null) {
+                CoverageTool.makeCovered("CsmList 13");
                 preceeding.prettyPrint(node, printer);
             }
             for (Iterator it = values.iterator(); it.hasNext(); ) {
+                CoverageTool.makeCovered("CsmList 14");
                 if (separatorPre != null && it.hasNext()) {
+                    CoverageTool.makeCovered("CsmList 15");
                     separatorPre.prettyPrint(node, printer);
                 }
                 printer.print(PrintingHelper.printToString(it.next()));
                 if (separatorPost != null && it.hasNext()) {
+                    CoverageTool.makeCovered("CsmList 16");
                     separatorPost.prettyPrint(node, printer);
                 }
             }
             if (!values.isEmpty() && following != null) {
+                CoverageTool.makeCovered("CsmList 17");
                 following.prettyPrint(node, printer);
             }
         }
