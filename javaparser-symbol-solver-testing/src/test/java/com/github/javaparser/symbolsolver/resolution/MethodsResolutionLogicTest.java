@@ -16,9 +16,19 @@
 
 package com.github.javaparser.symbolsolver.resolution;
 
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.resolution.MethodUsage;
+import com.github.javaparser.resolution.declarations.ResolvedMethodDeclaration;
+import com.github.javaparser.resolution.declarations.ResolvedTypeDeclaration;
 import com.github.javaparser.resolution.types.ResolvedReferenceType;
+import com.github.javaparser.resolution.types.ResolvedType;
+import com.github.javaparser.symbolsolver.javaparser.Navigator;
+import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserClassDeclaration;
+import com.github.javaparser.symbolsolver.model.resolution.SymbolReference;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
 import com.github.javaparser.symbolsolver.reflectionmodel.ReflectionFactory;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
@@ -79,5 +89,40 @@ public class MethodsResolutionLogicTest extends AbstractResolutionTest {
         MethodUsage mu = constructorDeclaration.getAllMethods().stream().filter(m -> m.getDeclaration().getSignature().equals("isThrows(java.lang.Class<? extends java.lang.Throwable>)")).findFirst().get();
 
         assertEquals(true, MethodResolutionLogic.isApplicable(mu, "isThrows", ImmutableList.of(classOfRuntimeType), typeSolver));
+    }
+
+    /**
+     * Covers the first return statement in MethodResolutionLogic.isApplicable(MethodUsage method, ...) ~line 275
+     * also covers the first return statement in MethodResolutionLogic.isApplicable(ResolvedMethodDeclaration method, ...) ~line 71
+     * and its corresponding helper function, isApplicable(ResolvedMethodDeclaration method, String name, List<ResolvedType> argumentsTypes, TypeSolver typeSolver).
+     *
+     * The return statement in question checks that parameter method.getName() is equal to parameter name, else simply returns false.
+     * Method coverage before: 91,3%
+     * Method coverage after: 95.7%
+     * Branch coverage before: ??
+     * Branch coverage after: ??
+     */
+    @Test
+    public void differingMethodNamesReturnsFalse() {
+        JavaParserClassDeclaration constructorDeclaration = (JavaParserClassDeclaration) typeSolver.solveType("com.github.javaparser.ast.body.ConstructorDeclaration");
+
+        ResolvedReferenceType rawClassType = (ResolvedReferenceType) ReflectionFactory.typeUsageFor(Class.class, typeSolver);
+        MethodUsage mu = constructorDeclaration.getAllMethods().stream().filter(m -> m.getDeclaration().getSignature().equals("isThrows(java.lang.Class<? extends java.lang.Throwable>)")).findFirst().get();
+
+        //This .isApplicable call is to another method declared on line ~275, taking MethodUsage method as parameter.
+        //Makes sure that the name check branch is reached in that method.
+        assertEquals(false, MethodResolutionLogic.isApplicable(mu, "isntThrows", ImmutableList.of(rawClassType), typeSolver));
+
+        //Generating a ResolvedMethodDeclaration method that differs from mu above.
+        CompilationUnit cu = parseSample("Issue338");
+        ClassOrInterfaceDeclaration clazz = Navigator.demandClass(cu, "TypePromotions");
+        MethodDeclaration method = Navigator.demandMethod(clazz, "callingLong");
+        MethodCallExpr expression = method.getBody().get().getStatements().get(0).asExpressionStmt().getExpression().asMethodCallExpr();
+        SymbolReference<ResolvedMethodDeclaration> reference = JavaParserFacade.get(new ReflectionTypeSolver()).solve(expression);
+        ResolvedMethodDeclaration typeDecl = reference.getCorrespondingDeclaration();
+
+        // Validates that branch of isApplicable method in question
+        assertEquals(false, MethodResolutionLogic.isApplicable(typeDecl, "isThrows", ImmutableList.of(rawClassType), typeSolver));
+
     }
 }
