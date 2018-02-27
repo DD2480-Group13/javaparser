@@ -18,6 +18,7 @@ import java.util.List;
 
 import static com.github.javaparser.JavaParser.*;
 import static com.github.javaparser.ast.Modifier.*;
+import static com.github.javaparser.coveragetool.CoverageTool.makeCovered;
 import static com.github.javaparser.generator.metamodel.MetaModelGenerator.*;
 import static com.github.javaparser.utils.CodeGenerationUtils.f;
 import static com.github.javaparser.utils.CodeGenerationUtils.optionalOf;
@@ -28,6 +29,7 @@ public class NodeMetaModelGenerator {
     private final InitializeConstructorParametersStatementsGenerator initializeConstructorParametersStatementsGenerator = new InitializeConstructorParametersStatementsGenerator();
 
     public void generate(Class<? extends Node> nodeClass, ClassOrInterfaceDeclaration metaModelCoid, NodeList<Statement> initializeNodeMetaModelsStatements, NodeList<Statement> initializePropertyMetaModelsStatements, NodeList<Statement> initializeConstructorParametersStatements, SourceRoot sourceRoot) throws NoSuchMethodException {
+        makeCovered("NodeMetaModelGenerator 1");
         final String className = nodeMetaModelName(nodeClass);
         final String nodeMetaModelFieldName = decapitalize(className);
         metaModelCoid.getFieldByName(nodeMetaModelFieldName).ifPresent(Node::remove);
@@ -49,8 +51,10 @@ public class NodeMetaModelGenerator {
         sourceRoot.add(METAMODEL_PACKAGE, className + ".java", classMetaModelJavaFile);
         final ClassOrInterfaceDeclaration nodeMetaModelClass = classMetaModelJavaFile.addClass(className, PUBLIC);
         if (isRootNode) {
+            makeCovered("NodeMetaModelGenerator 2");
             nodeMetaModelClass.addExtendedType(BASE_NODE_META_MODEL);
         } else {
+            makeCovered("NodeMetaModelGenerator 3");
             nodeMetaModelClass.addExtendedType(superNodeMetaModel);
         }
 
@@ -70,6 +74,7 @@ public class NodeMetaModelGenerator {
                         typeAnalysis.isSelfType)));
 
         if (typeAnalysis.isAbstract) {
+            makeCovered("NodeMetaModelGenerator 4");
             classMetaModelJavaFile.addImport(Node.class);
             nodeMetaModelClass.addMember(parseBodyDeclaration(f(
                     "protected %s(Optional<BaseNodeMetaModel> superNodeMetaModel, Class<? extends Node> type, String name, String packageName, boolean isAbstract, boolean hasWildcard) {" +
@@ -81,7 +86,9 @@ public class NodeMetaModelGenerator {
         final List<Field> fields = new ArrayList<>(Arrays.asList(nodeClass.getDeclaredFields()));
         fields.sort(Comparator.comparing(Field::getName));
         for (Field field : fields) {
+            makeCovered("NodeMetaModelGenerator 5");
             if (fieldShouldBeIgnored(field)) {
+                makeCovered("NodeMetaModelGenerator 6");
                 continue;
             }
 
@@ -90,7 +97,9 @@ public class NodeMetaModelGenerator {
         final List<Method> methods = new ArrayList<>(Arrays.asList(nodeClass.getMethods()));
         methods.sort(Comparator.comparing(Method::getName));
         for (Method method : methods) {
+            makeCovered("NodeMetaModelGenerator 7");
             if (method.isAnnotationPresent(DerivedProperty.class)) {
+                makeCovered("NodeMetaModelGenerator 8");
                 initializePropertyMetaModelsStatementsGenerator.generateDerivedProperty(method, nodeMetaModelClass, nodeMetaModelFieldName, initializePropertyMetaModelsStatements);
             }
         }
