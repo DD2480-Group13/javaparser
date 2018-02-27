@@ -16,6 +16,7 @@
 
 package com.github.javaparser.symbolsolver.resolution;
 
+import com.github.javaparser.coveragetool.CoverageTool;
 import com.github.javaparser.resolution.MethodAmbiguityException;
 import com.github.javaparser.resolution.MethodUsage;
 import com.github.javaparser.resolution.declarations.*;
@@ -70,74 +71,122 @@ public class MethodResolutionLogic {
     }
 
     private static boolean isApplicable(ResolvedMethodDeclaration method, String name, List<ResolvedType> argumentsTypes, TypeSolver typeSolver, boolean withWildcardTolerance) {
+        CoverageTool.makeCovered("isApplicable 0");
         if (!method.getName().equals(name)) {
+            CoverageTool.makeCovered("isApplicable 1");
             return false;
+        } else {
+            CoverageTool.makeCovered("isApplicable 2");
         }
         if (method.hasVariadicParameter()) {
+            CoverageTool.makeCovered("isApplicable 3");
             int pos = method.getNumberOfParams() - 1;
             if (method.getNumberOfParams() == argumentsTypes.size()) {
+                CoverageTool.makeCovered("isApplicable 4");
                 // check if the last value is directly assignable as an array
                 ResolvedType expectedType = method.getLastParam().getType();
                 ResolvedType actualType = argumentsTypes.get(pos);
                 if (!expectedType.isAssignableBy(actualType)) {
+                    CoverageTool.makeCovered("isApplicable 5");
                     for (ResolvedTypeParameterDeclaration tp : method.getTypeParameters()) {
+                        CoverageTool.makeCovered("isApplicable 6");
                         expectedType = replaceTypeParam(expectedType, tp, typeSolver);
                     }
                     if (!expectedType.isAssignableBy(actualType)) {
+                        CoverageTool.makeCovered("isApplicable 7");
                         if (actualType.isArray() && expectedType.isAssignableBy(actualType.asArrayType().getComponentType())) {
+                            CoverageTool.makeCovered("isApplicable 8");
                             argumentsTypes.set(pos, actualType.asArrayType().getComponentType());
                         } else {
+                            CoverageTool.makeCovered("isApplicable 9");
                             argumentsTypes = groupVariadicParamValues(argumentsTypes, pos, method.getLastParam().getType());
                         }
+                    } else {
+                        CoverageTool.makeCovered("isApplicable 10");
                     }
                 } // else it is already assignable, nothing to do
+                else {
+                    CoverageTool.makeCovered("isApplicable 11");
+                    }
             } else {
+                CoverageTool.makeCovered("isApplicable 12");
                 if (pos > argumentsTypes.size()) {
+                    CoverageTool.makeCovered("isApplicable 13");
                   return false;
+                } else {
+                    CoverageTool.makeCovered("isApplicable 14");
                 }
                 argumentsTypes = groupVariadicParamValues(argumentsTypes, pos, method.getLastParam().getType());
             }
+        } else {
+            CoverageTool.makeCovered("isApplicable 15");
         }
 
         if (method.getNumberOfParams() != argumentsTypes.size()) {
+            CoverageTool.makeCovered("isApplicable 16");
             return false;
+        } else {
+            CoverageTool.makeCovered("isApplicable 17");
         }
         Map<String, ResolvedType> matchedParameters = new HashMap<>();
         boolean needForWildCardTolerance = false;
         for (int i = 0; i < method.getNumberOfParams(); i++) {
+            CoverageTool.makeCovered("isApplicable 18");
             ResolvedType expectedType = method.getParam(i).getType();
             ResolvedType actualType = argumentsTypes.get(i);
             if ((expectedType.isTypeVariable() && !(expectedType.isWildcard())) && expectedType.asTypeParameter().declaredOnMethod()) {
+                CoverageTool.makeCovered("isApplicable 19");
                 matchedParameters.put(expectedType.asTypeParameter().getName(), actualType);
                 continue;
+            } else {
+                CoverageTool.makeCovered("isApplicable 20");
             }
             boolean isAssignableWithoutSubstitution = expectedType.isAssignableBy(actualType) ||
                     (method.getParam(i).isVariadic() && new ResolvedArrayType(expectedType).isAssignableBy(actualType));
             if (!isAssignableWithoutSubstitution && expectedType.isReferenceType() && actualType.isReferenceType()) {
+                CoverageTool.makeCovered("isApplicable 21");
                 isAssignableWithoutSubstitution = isAssignableMatchTypeParameters(
                         expectedType.asReferenceType(),
                         actualType.asReferenceType(),
                         matchedParameters);
+            } else {
+                CoverageTool.makeCovered("isApplicable 22");
             }
             if (!isAssignableWithoutSubstitution) {
+                CoverageTool.makeCovered("isApplicable 23");
                 List<ResolvedTypeParameterDeclaration> typeParameters = method.getTypeParameters();
                 typeParameters.addAll(method.declaringType().getTypeParameters());
                 for (ResolvedTypeParameterDeclaration tp : typeParameters) {
+                    CoverageTool.makeCovered("isApplicable 24");
                     expectedType = replaceTypeParam(expectedType, tp, typeSolver);
                 }
 
                 if (!expectedType.isAssignableBy(actualType)) {
+                    CoverageTool.makeCovered("isApplicable 25");
                     if (actualType.isWildcard() && withWildcardTolerance && !expectedType.isPrimitive()) {
+                        CoverageTool.makeCovered("isApplicable 26");
                         needForWildCardTolerance = true;
                         continue;
+                    } else {
+                        CoverageTool.makeCovered("isApplicable 27");
                     }
                     if (method.hasVariadicParameter() && i == method.getNumberOfParams() - 1) {
+                        CoverageTool.makeCovered("isApplicable 28");
                         if (new ResolvedArrayType(expectedType).isAssignableBy(actualType)) {
+                            CoverageTool.makeCovered("isApplicable 29");
                             continue;
+                        } else {
+                            CoverageTool.makeCovered("isApplicable 30");
                         }
+                    } else {
+                        CoverageTool.makeCovered("isApplicable 31");
                     }
                     return false;
+                } else {
+                    CoverageTool.makeCovered("isApplicable 32");
                 }
+            } else {
+                CoverageTool.makeCovered("isApplicable 33");
             }
         }
         return !withWildcardTolerance || needForWildCardTolerance;
