@@ -30,10 +30,9 @@ public class CsmListTest {
         ObservableProperty prop = Mockito.mock(ObservableProperty.class);
         Mockito.when(prop.isAboutNodes()).thenReturn(true);
         CsmMock preceeding = new CsmMock();
-        CsmMock following = null;
         NodeList list = new NodeList<>((Node)null);
         Mockito.when(prop.getValueAsMultipleReference(Mockito.any(Node.class))).thenReturn(list);
-        CsmList test = new CsmList(prop, new CsmNone(), new CsmNone(), preceeding, following);
+        CsmList test = new CsmList(prop, new CsmNone(), new CsmNone(), preceeding, new CsmNone());
         test.prettyPrint(null, null);
 
         Assert.assertEquals(1, preceeding.getPrettyPrintCalls());
@@ -43,14 +42,26 @@ public class CsmListTest {
     public void testFollowing() {
         ObservableProperty prop = Mockito.mock(ObservableProperty.class);
         Mockito.when(prop.isAboutNodes()).thenReturn(false);
-        CsmMock preceeding = null;
         CsmMock following = new CsmMock();
         NodeList list = new NodeList<>((Node)null);
         Mockito.when(prop.getValueAsMultipleReference(Mockito.any(Node.class))).thenReturn(list);
-        CsmList test = new CsmList(prop, new CsmNone(), new CsmNone(), preceeding, following);
+        CsmList test = new CsmList(prop, new CsmNone(), new CsmNone(), new CsmNone(), following);
         test.prettyPrint(null, null);
 
         Assert.assertEquals(1, following.getPrettyPrintCalls());
+    }
+
+    @Test
+    public void testSeparatorPre() {
+        ObservableProperty prop = Mockito.mock(ObservableProperty.class);
+        Mockito.when(prop.isAboutNodes()).thenReturn(false);
+        CsmMock separatorPre = new CsmMock();
+        NodeList list = new NodeList<>((Node)null);
+        Mockito.when(prop.getValueAsMultipleReference(Mockito.any(Node.class))).thenReturn(list);
+        CsmList test = new CsmList(prop, separatorPre, new CsmNone(), new CsmNone(), new CsmNone());
+        test.prettyPrint(null, null);
+
+        Assert.assertEquals(1, separatorPre.getPrettyPrintCalls());
     }
 
     @Test
