@@ -16,7 +16,6 @@
 
 package com.github.javaparser.symbolsolver.resolution.javaparser.contexts;
 
-import com.github.javaparser.ParseException;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
@@ -32,12 +31,12 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSol
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -122,5 +121,29 @@ public class MethodCallExprContextResolutionTest extends AbstractResolutionTest 
         assertTrue(ref.isPresent());
         assertEquals("MethodCalls", ref.get().declaringType().getQualifiedName());
         assertEquals(Collections.singletonList("java.lang.String"), ref.get().typeParametersMap().getTypes().stream().map(ty -> ty.asReferenceType().describe()).collect(Collectors.toList()));
+    }
+
+
+    @Test(expected = RuntimeException.class)
+    public void inferTypes() throws Throwable {
+
+        Class[] args = new Class[3];
+        args[0] = ResolvedType.class;
+        args[1] = ResolvedType.class;
+        args[2] = Map.class;
+
+        Method method = MethodCallExprContext.class.getDeclaredMethod("inferTypes", args);
+        method.setAccessible(true);
+
+        MethodCallExprContext mock = Mockito.mock(MethodCallExprContext.class);
+        ResolvedType resolvedType1 = Mockito.mock(ResolvedType.class);
+        ResolvedType resolvedType2 = Mockito.mock(ResolvedType.class);
+        Map map = Mockito.mock(Map.class);
+
+        try {
+            method.invoke(mock, resolvedType1, resolvedType2,map);
+        }catch(InvocationTargetException e) {
+            throw e.getCause();
+        }
     }
 }

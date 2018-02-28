@@ -1053,6 +1053,20 @@ public class LexicalPreservingPrinterTest extends AbstractLexicalPreservingTest 
         cu.accept(new CallModifierVisitor(), null);
     }
 
+    /**
+     * Covers the first return branch for createObserver.
+     * Makes checks so that the returned cu has not been changed at all, indiciating a return has occured.
+     * @throws IOException
+     */
+    @Test
+    public void createObserverCoverFirstReturn() throws IOException {
+        considerExample("ASimpleClassWithMoreFormatting");
+
+        cu.getClassByName("ASimpleClass").get()
+                .setName("ASimpleClass");
+        assertEquals(readExample("ASimpleClassWithMoreFormatting"), LexicalPreservingPrinter.print(cu));
+    }
+
     @Test
     public void findNodeListNameOptionalTest() {
         // Contract: Ensures that the right name is returned even if the method in question returns an Optional<NodeList>

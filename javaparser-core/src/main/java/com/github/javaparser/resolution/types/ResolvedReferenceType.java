@@ -397,7 +397,7 @@ public abstract class ResolvedReferenceType implements ResolvedType,
         }
     }
 
-    protected boolean compareConsideringTypeParameters(ResolvedReferenceType other) {
+    public boolean compareConsideringTypeParameters(ResolvedReferenceType other) {
         if (other.equals(this)) {
             CoverageTool.makeCovered("ResolvedReferenceType 1");
             return true;

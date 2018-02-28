@@ -34,10 +34,15 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeS
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -151,6 +156,34 @@ public class MethodsResolutionLogicTest extends AbstractResolutionTest {
         Mockito.when(mocked_method.getNumberOfParams()).thenReturn(5);
 
         assertEquals(false, MethodResolutionLogic.isApplicable(mocked_method, name, ImmutableList.of(rawClassType), typeSolver));
+    }
 
+    @Test(expected = IllegalStateException.class)
+    public void unsupportedOperationException() throws Throwable {
+
+        Class[] args = new Class[1];
+        args[0] = ResolvedReferenceType.class;
+
+        Method method = ResolvedReferenceType.class.getDeclaredMethod("compareConsideringTypeParameters", args);
+        method.setAccessible(true);
+
+        String mock = "mock";
+
+        ResolvedReferenceType resolved1 = Mockito.mock(ResolvedReferenceType.class);
+        Mockito.when(resolved1.getQualifiedName()).thenReturn(mock);
+        Mockito.when(resolved1.compareConsideringTypeParameters(Mockito.any(ResolvedReferenceType.class))).thenCallRealMethod();
+
+        List mockList1 = Mockito.mock(ArrayList.class);
+        Mockito.when(mockList1.size()).thenReturn((Integer)9);
+        Mockito.when(resolved1.typeParametersValues()).thenReturn(mockList1);
+
+        ResolvedReferenceType resolved2 = Mockito.mock(ResolvedReferenceType.class);
+        Mockito.when(resolved2.getQualifiedName()).thenReturn(mock);
+
+        List mockList2 = Mockito.mock(ArrayList.class);
+        Mockito.when(mockList2.size()).thenReturn((Integer)10);
+        Mockito.when(resolved2.typeParametersValues()).thenReturn(mockList2);
+
+        resolved1.compareConsideringTypeParameters(resolved2);
     }
 }
