@@ -4,6 +4,7 @@ import com.github.javaparser.*;
 import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.expr.*;
+import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.type.UnionType;
@@ -12,14 +13,11 @@ import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import com.github.javaparser.resolution.types.ResolvedType;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -1055,23 +1053,62 @@ public class LexicalPreservingPrinterTest extends AbstractLexicalPreservingTest 
         cu.accept(new CallModifierVisitor(), null);
     }
 
-    @Test//(expected = IllegalArgumentException.class)
-    public void findNodeListNameInvalidParentNodeTest() {
-        // Contract
+    //@Test
+    public void findNodeListNameOptionalTest() {
+        // Contract: Ensures that the right name is returned even if the method in question returns an Optional<NodeList>
+        // rather than just a NodeList
+        // Provides coverage of 9, 10, 11
         String code = "class A {int foo() {return 0;}}";
         considerCode(code);
-        System.out.println("THIS ONE");
         NodeList stmt = cu.getClassByName("A").get().getMethodsByName("foo").get(0).getBody().get().getStatements();
-        stmt.setParentNode(new MockParentNode());
-        System.out.println(LexicalPreservingPrinter.findNodeListName(stmt));
+        stmt.setParentNode(new ExpressionOptionalMockParentNode(stmt));
+        assertEquals(ObservableProperty.EXPRESSION, LexicalPreservingPrinter.findNodeListName(stmt));
+    }
+
+    // @Test
+    public void findNodeListNameOptionalGetTest() {
+        // Contract: Ensures that the right name is returned even if the method in question returns an Optional<NodeList>
+        // rather than just a NodeList and the method has a 'get' prefix.
+        // Provides coverage of 9, 10, 11, 12
+        String code = "class A {int foo() {return 0;}}";
+        considerCode(code);
+        NodeList stmt = cu.getClassByName("A").get().getMethodsByName("foo").get(0).getBody().get().getStatements();
+        stmt.setParentNode(new ExpressionOptionalGetMockParentNode(stmt));
+        assertEquals(ObservableProperty.EXPRESSION, LexicalPreservingPrinter.findNodeListName(stmt));
+    }
+
+    // @Test(expected = IllegalArgumentException.class)
+    public void findNodeListNameOptionalIllegalTest() {
+        // Contract: Only public methods are considered for finding the name. Otherwise matching private methods should
+        // not be considered valid.
+        // Provides coverage of 14
+        String code = "class A {int foo() {return 0;}}";
+        considerCode(code);
+        NodeList stmt = cu.getClassByName("A").get().getMethodsByName("foo").get(0).getBody().get().getStatements();
+        stmt.setParentNode(new PrivateExpressionOptionalMockParentNode(stmt));
+        assertEquals(ObservableProperty.EXPRESSION, LexicalPreservingPrinter.findNodeListName(stmt));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void findNodeListNameNullTest() {
+        // Contract: If the output of a method is not a NodeList despite the output type claiming it is,
+        // should throw IllegalStateException.
+        // Provides coverage of 4. Also fails due to NullPointerException.
+        String code = "class A {int foo() {return 0;}}";
+        considerCode(code);
+        NodeList stmt = cu.getClassByName("A").get().getMethodsByName("foo").get(0).getBody().get().getStatements();
+        stmt.setParentNode(new FakeExpressionMockParentNode(stmt));
+        assertEquals(ObservableProperty.EXPRESSION, LexicalPreservingPrinter.findNodeListName(stmt));
     }
 }
 
-class MockParentNode extends Node {
+class ExpressionOptionalMockParentNode extends Node {
 
+    private final NodeList list;
 
-    protected MockParentNode() {
+    protected ExpressionOptionalMockParentNode(NodeList list) {
         super(TokenRange.INVALID);
+        this.list = list;
     }
 
     @Override
@@ -1084,7 +1121,80 @@ class MockParentNode extends Node {
 
     }
 
-    public Optional<NodeList> a() {
-        return Optional.empty();
+    public Optional<NodeList> expression() {
+        return Optional.of(list);
+    }
+}
+
+class ExpressionOptionalGetMockParentNode extends Node {
+
+
+    private final NodeList list;
+
+    protected ExpressionOptionalGetMockParentNode(NodeList list) {
+        super(TokenRange.INVALID);
+        this.list = list;
+    }
+
+    @Override
+    public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
+        return null;
+    }
+
+    @Override
+    public <A> void accept(VoidVisitor<A> v, A arg) {
+
+    }
+
+    public Optional<NodeList> getExpression() {
+        return Optional.of(list);
+    }
+}
+
+class PrivateExpressionOptionalMockParentNode extends Node {
+
+    private final NodeList list;
+
+    protected PrivateExpressionOptionalMockParentNode(NodeList list) {
+        super(TokenRange.INVALID);
+        this.list = list;
+    }
+
+    @Override
+    public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
+        return null;
+    }
+
+    @Override
+    public <A> void accept(VoidVisitor<A> v, A arg) {
+
+    }
+
+    private Optional<NodeList> expression() {
+        return Optional.of(list);
+    }
+}
+
+class FakeExpressionMockParentNode extends Node {
+
+    private final NodeList list;
+
+    protected FakeExpressionMockParentNode(NodeList list) {
+        super(TokenRange.INVALID);
+        this.list = list;
+    }
+
+    @Override
+    public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
+        return null;
+    }
+
+    @Override
+    public <A> void accept(VoidVisitor<A> v, A arg) {
+
+    }
+
+    public NodeList expression() {
+        return null;
     }
 }
