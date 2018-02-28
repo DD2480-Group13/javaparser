@@ -1053,7 +1053,7 @@ public class LexicalPreservingPrinterTest extends AbstractLexicalPreservingTest 
         cu.accept(new CallModifierVisitor(), null);
     }
 
-    //@Test
+    @Test
     public void findNodeListNameOptionalTest() {
         // Contract: Ensures that the right name is returned even if the method in question returns an Optional<NodeList>
         // rather than just a NodeList
@@ -1065,7 +1065,7 @@ public class LexicalPreservingPrinterTest extends AbstractLexicalPreservingTest 
         assertEquals(ObservableProperty.EXPRESSION, LexicalPreservingPrinter.findNodeListName(stmt));
     }
 
-    // @Test
+    @Test
     public void findNodeListNameOptionalGetTest() {
         // Contract: Ensures that the right name is returned even if the method in question returns an Optional<NodeList>
         // rather than just a NodeList and the method has a 'get' prefix.
@@ -1077,7 +1077,7 @@ public class LexicalPreservingPrinterTest extends AbstractLexicalPreservingTest 
         assertEquals(ObservableProperty.EXPRESSION, LexicalPreservingPrinter.findNodeListName(stmt));
     }
 
-    // @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void findNodeListNameOptionalIllegalTest() {
         // Contract: Only public methods are considered for finding the name. Otherwise matching private methods should
         // not be considered valid.
