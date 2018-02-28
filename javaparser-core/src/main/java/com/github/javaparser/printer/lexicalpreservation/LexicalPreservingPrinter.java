@@ -34,6 +34,7 @@ import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.observer.PropagatingAstObserver;
 import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.ast.visitor.TreeVisitor;
+import com.github.javaparser.coveragetool.CoverageTool;
 import com.github.javaparser.printer.ConcreteSyntaxModel;
 import com.github.javaparser.printer.concretesyntaxmodel.CsmElement;
 import com.github.javaparser.printer.concretesyntaxmodel.CsmMix;
@@ -467,41 +468,57 @@ public class LexicalPreservingPrinter {
         return (optionalArgument.getTypeName().startsWith(NodeList.class.getCanonicalName()));
     }
 
-    private static ObservableProperty findNodeListName(NodeList nodeList) {
+    // Visible for testing
+    static ObservableProperty findNodeListName(NodeList nodeList) {
+        CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 0");
         Node parent = nodeList.getParentNodeForChildren();
         for (Method m : parent.getClass().getMethods()) {
+            CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 1");
             if (m.getParameterCount() == 0 && m.getReturnType().getCanonicalName().equals(NodeList.class.getCanonicalName())) {
+                CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 2");
                 try {
+                    CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 3");
                     Object raw = m.invoke(parent);
                     if (!(raw instanceof NodeList)) {
+                        CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 4");
                         throw new IllegalStateException("Expected NodeList, found " + raw.getClass().getCanonicalName());
                     }
+                    CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 5");
                     NodeList result = (NodeList) raw;
                     if (result == nodeList) {
+                        CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 6");
                         String name = m.getName();
                         if (name.startsWith("get")) {
+                            CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 7");
                             name = name.substring("get".length());
                         }
                         return ObservableProperty.fromCamelCaseName(decapitalize(name));
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
+                    CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 8");
                     throw new RuntimeException(e);
                 }
             } else if (m.getParameterCount() == 0 && isReturningOptionalNodeList(m)) {
+                CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 9");
                 try {
+                    CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 10");
                     Optional<NodeList<?>> raw = (Optional<NodeList<?>>) m.invoke(parent);
                     if (raw.isPresent() && raw.get() == nodeList) {
+                        CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 11");
                         String name = m.getName();
                         if (name.startsWith("get")) {
+                            CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 12");
                             name = name.substring("get".length());
                         }
                         return ObservableProperty.fromCamelCaseName(decapitalize(name));
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
+                    CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 13");
                     throw new RuntimeException(e);
                 }
             }
         }
+        CoverageTool.makeCovered("LexicalPreservingPrinter.findNodeListName 14");
         throw new IllegalArgumentException("Cannot find list name of NodeList of size " + nodeList.size());
     }
 }
