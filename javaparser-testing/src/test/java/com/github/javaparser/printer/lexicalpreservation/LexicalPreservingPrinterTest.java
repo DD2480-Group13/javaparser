@@ -8,13 +8,19 @@ import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.type.UnionType;
 import com.github.javaparser.ast.type.VoidType;
+import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
+import com.github.javaparser.ast.visitor.VoidVisitor;
+import com.github.javaparser.resolution.types.ResolvedType;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter.NODE_TEXT_DATA;
@@ -1047,5 +1053,38 @@ public class LexicalPreservingPrinterTest extends AbstractLexicalPreservingTest 
         CompilationUnit cu = JavaParser.parse(code);
         LexicalPreservingPrinter.setup(cu);
         cu.accept(new CallModifierVisitor(), null);
+    }
+
+    @Test//(expected = IllegalArgumentException.class)
+    public void findNodeListNameInvalidParentNodeTest() {
+        // Contract
+        String code = "class A {int foo() {return 0;}}";
+        considerCode(code);
+        System.out.println("THIS ONE");
+        NodeList stmt = cu.getClassByName("A").get().getMethodsByName("foo").get(0).getBody().get().getStatements();
+        stmt.setParentNode(new MockParentNode());
+        System.out.println(LexicalPreservingPrinter.findNodeListName(stmt));
+    }
+}
+
+class MockParentNode extends Node {
+
+
+    protected MockParentNode() {
+        super(TokenRange.INVALID);
+    }
+
+    @Override
+    public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
+        return null;
+    }
+
+    @Override
+    public <A> void accept(VoidVisitor<A> v, A arg) {
+
+    }
+
+    public Optional<NodeList> a() {
+        return Optional.empty();
     }
 }
