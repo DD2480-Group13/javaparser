@@ -19,6 +19,7 @@ package com.github.javaparser.symbolsolver.javaparsermodel.contexts;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.coveragetool.CoverageTool;
 import com.github.javaparser.resolution.MethodUsage;
 import com.github.javaparser.resolution.UnsolvedSymbolException;
 import com.github.javaparser.resolution.declarations.*;
@@ -39,6 +40,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.github.javaparser.coveragetool.CoverageTool.*;
 
 public class MethodCallExprContext extends AbstractJavaParserContext<MethodCallExpr> {
 
@@ -219,15 +222,21 @@ public class MethodCallExprContext extends AbstractJavaParserContext<MethodCallE
     }
 
     private void inferTypes(ResolvedType source, ResolvedType target, Map<ResolvedTypeParameterDeclaration, ResolvedType> mappings) {
+        makeCovered("MethodCallExprContext 1");
         if (source.equals(target)) {
+            makeCovered("MethodCallExprContext 2");
             return;
         }
         if (source.isReferenceType() && target.isReferenceType()) {
+            makeCovered("MethodCallExprContext 3");
             ResolvedReferenceType sourceRefType = source.asReferenceType();
             ResolvedReferenceType targetRefType = target.asReferenceType();
             if (sourceRefType.getQualifiedName().equals(targetRefType.getQualifiedName())) {
+                makeCovered("MethodCallExprContext 4");
             	if (!sourceRefType.isRawType() && !targetRefType.isRawType()) {
+                    makeCovered("MethodCallExprContext 5");
 	                for (int i = 0; i < sourceRefType.typeParametersValues().size(); i++) {
+                        makeCovered("MethodCallExprContext 6");
 	                    inferTypes(sourceRefType.typeParametersValues().get(i), targetRefType.typeParametersValues().get(i), mappings);
 	                }
             	}
@@ -236,62 +245,79 @@ public class MethodCallExprContext extends AbstractJavaParserContext<MethodCallE
         }
         if (source.isReferenceType() && target.isWildcard()) {
             if (target.asWildcard().isBounded()) {
+                makeCovered("MethodCallExprContext 7");
                 inferTypes(source, target.asWildcard().getBoundedType(), mappings);
                 return;
             }
+            makeCovered("MethodCallExprContext 8");
             return;
         }
         if (source.isWildcard() && target.isWildcard()) {
+            makeCovered("MethodCallExprContext 9");
             if (source.asWildcard().isBounded() && target.asWildcard().isBounded()){
+                makeCovered("MethodCallExprContext 10");
                 inferTypes(source.asWildcard().getBoundedType(), target.asWildcard().getBoundedType(), mappings);
             }
             return;
         }
         if (source.isReferenceType() && target.isTypeVariable()) {
+            makeCovered("MethodCallExprContext 11");
             mappings.put(target.asTypeParameter(), source);
             return;
         }
         if (source.isWildcard() && target.isTypeVariable()) {
+            makeCovered("MethodCallExprContext 12");
             mappings.put(target.asTypeParameter(), source);
             return;
         }
         if (source.isArray() && target.isWildcard()){
             if(target.asWildcard().isBounded()){
+                makeCovered("MethodCallExprContext 13");
                 inferTypes(source, target.asWildcard().getBoundedType(), mappings);
                 return;
             }
+            makeCovered("MethodCallExprContext 14");
             return;
         }
         if (source.isArray() && target.isTypeVariable()) {
+            makeCovered("MethodCallExprContext 15");
             mappings.put(target.asTypeParameter(), source);
             return;
         }
 
         if (source.isWildcard() && target.isReferenceType()){
+            makeCovered("MethodCallExprContext 16");
             if (source.asWildcard().isBounded()){
+                makeCovered("MethodCallExprContext 17");
                 inferTypes(source.asWildcard().getBoundedType(), target, mappings);
             }
             return;
         }
         if (source.isConstraint() && target.isReferenceType()){
+            makeCovered("MethodCallExprContext 18");
             inferTypes(source.asConstraintType().getBound(), target, mappings);
             return;
         }
 
         if (source.isConstraint() && target.isTypeVariable()){
+            makeCovered("MethodCallExprContext 19");
             inferTypes(source.asConstraintType().getBound(), target, mappings);
             return;
         }
         if (source.isTypeVariable() && target.isTypeVariable()) {
+            makeCovered("MethodCallExprContext 20");
             mappings.put(target.asTypeParameter(), source);
             return;
         }
         if (source.isPrimitive() || target.isPrimitive()) {
+            makeCovered("MethodCallExprContext 21");
             return;
         }
         if (source.isNull()) {
+            makeCovered("MethodCallExprContext 22");
             return;
         }
+        makeCovered("MethodCallExprContext 22");
         throw new RuntimeException(source.describe() + " " + target.describe());
     }
 
