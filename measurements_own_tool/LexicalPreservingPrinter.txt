@@ -1,0 +1,22 @@
+---Before---
+1: LexicalPreservingPrinter.class:findNodeListName:517 : 13
+2: LexicalPreservingPrinter.class:findNodeListName:485 : 4
+3: LexicalPreservingPrinter.class:findNodeListName:474 : 1
+4: LexicalPreservingPrinter.class:findNodeListName:488 : 5
+5: LexicalPreservingPrinter.class:findNodeListName:494 : 7
+6: LexicalPreservingPrinter.class:findNodeListName:482 : 3
+
+---After---
+1: LexicalPreservingPrinter.findNodeListName 0
+2: LexicalPreservingPrinter.findNodeListName 1
+3: LexicalPreservingPrinter.findNodeListName 10
+4: LexicalPreservingPrinter.findNodeListName 11
+5: LexicalPreservingPrinter.findNodeListName 12
+6: LexicalPreservingPrinter.findNodeListName 14
+7: LexicalPreservingPrinter.findNodeListName 2
+8: LexicalPreservingPrinter.findNodeListName 3
+9: LexicalPreservingPrinter.findNodeListName 4
+10: LexicalPreservingPrinter.findNodeListName 5
+11: LexicalPreservingPrinter.findNodeListName 6
+12: LexicalPreservingPrinter.findNodeListName 7
+13: LexicalPreservingPrinter.findNodeListName 9

@@ -1,0 +1,38 @@
+---Before---
+1: ResolvedReferenceType 17
+2: ResolvedReferenceType 16
+3: ResolvedReferenceType 18
+4: ResolvedReferenceType 11
+5: ResolvedReferenceType 10
+6: ResolvedReferenceType 13
+7: ResolvedReferenceType 12
+8: ResolvedReferenceType 15
+9: ResolvedReferenceType 14
+10: ResolvedReferenceType 2
+11: ResolvedReferenceType 1
+12: ResolvedReferenceType 4
+13: ResolvedReferenceType 3
+14: ResolvedReferenceType 6
+15: ResolvedReferenceType 8
+16: ResolvedReferenceType 7
+17: ResolvedReferenceType 9
+
+---After---
+1: ResolvedReferenceType 1
+2: ResolvedReferenceType 10
+3: ResolvedReferenceType 11
+4: ResolvedReferenceType 12
+5: ResolvedReferenceType 13
+6: ResolvedReferenceType 14
+7: ResolvedReferenceType 15
+8: ResolvedReferenceType 16
+9: ResolvedReferenceType 17
+10: ResolvedReferenceType 18
+11: ResolvedReferenceType 2
+12: ResolvedReferenceType 3
+13: ResolvedReferenceType 4
+14: ResolvedReferenceType 5
+15: ResolvedReferenceType 6
+16: ResolvedReferenceType 7
+17: ResolvedReferenceType 8
+18: ResolvedReferenceType 9

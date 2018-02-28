@@ -1,0 +1,34 @@
+---Before---
+1: MethodCallExprContext 20
+2: MethodCallExprContext 21
+3: MethodCallExprContext 22
+4: MethodCallExprContext 1
+5: MethodCallExprContext 2
+6: MethodCallExprContext 3
+7: MethodCallExprContext 4
+8: MethodCallExprContext 5
+9: MethodCallExprContext 6
+10: MethodCallExprContext 7
+11: MethodCallExprContext 9
+12: MethodCallExprContext 18
+13: MethodCallExprContext 12
+14: MethodCallExprContext 10
+15: MethodCallExprContext 11
+
+---After---
+1: MethodCallExprContext 1
+2: MethodCallExprContext 10
+3: MethodCallExprContext 11
+4: MethodCallExprContext 12
+5: MethodCallExprContext 18
+6: MethodCallExprContext 2
+7: MethodCallExprContext 20
+8: MethodCallExprContext 21
+9: MethodCallExprContext 22
+10: MethodCallExprContext 23
+11: MethodCallExprContext 3
+12: MethodCallExprContext 4
+13: MethodCallExprContext 5
+14: MethodCallExprContext 6
+15: MethodCallExprContext 7
+16: MethodCallExprContext 9

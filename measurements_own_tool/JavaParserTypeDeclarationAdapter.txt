@@ -1,0 +1,44 @@
+---Before---
+1: JavaParserTypeDeclarationAdapter.solveType 0
+2: JavaParserTypeDeclarationAdapter.solveType 1
+3: JavaParserTypeDeclarationAdapter.solveType 2
+4: JavaParserTypeDeclarationAdapter.solveType 3
+5: JavaParserTypeDeclarationAdapter.solveType 4
+6: JavaParserTypeDeclarationAdapter.solveType 5
+7: JavaParserTypeDeclarationAdapter.solveType 6
+8: JavaParserTypeDeclarationAdapter.solveType 7
+9: JavaParserTypeDeclarationAdapter.solveType 8
+10: JavaParserTypeDeclarationAdapter.solveType 9
+11: JavaParserTypeDeclarationAdapter.solveType 20
+12: JavaParserTypeDeclarationAdapter.solveType 15
+13: JavaParserTypeDeclarationAdapter.solveType 14
+14: JavaParserTypeDeclarationAdapter.solveType 17
+15: JavaParserTypeDeclarationAdapter.solveType 16
+16: JavaParserTypeDeclarationAdapter.solveType 11
+17: JavaParserTypeDeclarationAdapter.solveType 10
+18: JavaParserTypeDeclarationAdapter.solveType 13
+19: JavaParserTypeDeclarationAdapter.solveType 12
+
+---After---
+1: JavaParserTypeDeclarationAdapter.solveType 0
+2: JavaParserTypeDeclarationAdapter.solveType 1
+3: JavaParserTypeDeclarationAdapter.solveType 10
+4: JavaParserTypeDeclarationAdapter.solveType 11
+5: JavaParserTypeDeclarationAdapter.solveType 12
+6: JavaParserTypeDeclarationAdapter.solveType 13
+7: JavaParserTypeDeclarationAdapter.solveType 14
+8: JavaParserTypeDeclarationAdapter.solveType 15
+9: JavaParserTypeDeclarationAdapter.solveType 16
+10: JavaParserTypeDeclarationAdapter.solveType 17
+11: JavaParserTypeDeclarationAdapter.solveType 2
+12: JavaParserTypeDeclarationAdapter.solveType 20
+13: JavaParserTypeDeclarationAdapter.solveType 3
+14: JavaParserTypeDeclarationAdapter.solveType 4
+15: JavaParserTypeDeclarationAdapter.solveType 5
+16: JavaParserTypeDeclarationAdapter.solveType 6
+17: JavaParserTypeDeclarationAdapter.solveType 7
+18: JavaParserTypeDeclarationAdapter.solveType 8
+19: JavaParserTypeDeclarationAdapter.solveType 9
+
+
+
