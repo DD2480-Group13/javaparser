@@ -21,6 +21,7 @@
 
 package com.github.javaparser.resolution.types;
 
+import com.github.javaparser.coveragetool.CoverageTool;
 import com.github.javaparser.resolution.MethodUsage;
 import com.github.javaparser.resolution.declarations.ResolvedReferenceTypeDeclaration;
 import com.github.javaparser.resolution.declarations.ResolvedTypeParameterDeclaration;
@@ -398,44 +399,62 @@ public abstract class ResolvedReferenceType implements ResolvedType,
 
     protected boolean compareConsideringTypeParameters(ResolvedReferenceType other) {
         if (other.equals(this)) {
+            CoverageTool.makeCovered("ResolvedReferenceType 1");
             return true;
         }
+        CoverageTool.makeCovered("ResolvedReferenceType 2");
         if (this.getQualifiedName().equals(other.getQualifiedName())) {
+            CoverageTool.makeCovered("ResolvedReferenceType 3");
             if (this.isRawType() || other.isRawType()) {
+                CoverageTool.makeCovered("ResolvedReferenceType 4");
                 return true;
             }
             if (this.typeParametersValues().size() != other.typeParametersValues().size()) {
+                CoverageTool.makeCovered("ResolvedReferenceType 5");
                 throw new IllegalStateException();
             }
             for (int i = 0; i < typeParametersValues().size(); i++) {
+                CoverageTool.makeCovered("ResolvedReferenceType 6");
                 ResolvedType thisParam = typeParametersValues().get(i);
                 ResolvedType otherParam = other.typeParametersValues().get(i);
                 if (!thisParam.equals(otherParam)) {
+                    CoverageTool.makeCovered("ResolvedReferenceType 7");
                     if (thisParam instanceof ResolvedWildcard) {
+                        CoverageTool.makeCovered("ResolvedReferenceType 8");
                         ResolvedWildcard thisParamAsWildcard = (ResolvedWildcard) thisParam;
                         if (thisParamAsWildcard.isSuper() && otherParam.isAssignableBy(thisParamAsWildcard.getBoundedType())) {
+                            CoverageTool.makeCovered("ResolvedReferenceType 9");
                             // ok
                         } else if (thisParamAsWildcard.isExtends() && thisParamAsWildcard.getBoundedType().isAssignableBy(otherParam)) {
+                            CoverageTool.makeCovered("ResolvedReferenceType 10");
                             // ok
                         } else if (!thisParamAsWildcard.isBounded()) {
+                            CoverageTool.makeCovered("ResolvedReferenceType 11");
                             // ok
                         } else {
+                            CoverageTool.makeCovered("ResolvedReferenceType 12");
                             return false;
                         }
                     } else {
+                        CoverageTool.makeCovered("ResolvedReferenceType 13");
                         if (thisParam instanceof ResolvedTypeVariable && otherParam instanceof ResolvedTypeVariable) {
+                            CoverageTool.makeCovered("ResolvedReferenceType 14");
                             List<ResolvedType> thisBounds = thisParam.asTypeVariable().asTypeParameter().getBounds().stream().map(bound -> bound.getType()).collect(Collectors.toList());
                             List<ResolvedType> otherBounds = otherParam.asTypeVariable().asTypeParameter().getBounds().stream().map(bound -> bound.getType()).collect(Collectors.toList());
                             if (thisBounds.size() == otherBounds.size() && otherBounds.containsAll(thisBounds)) {
+                                CoverageTool.makeCovered("ResolvedReferenceType 15");
                                 return true;
                             }
                         }
+                        CoverageTool.makeCovered("ResolvedReferenceType 16");
                         return false;
                     }
                 }
             }
+            CoverageTool.makeCovered("ResolvedReferenceType 17");
             return true;
         }
+        CoverageTool.makeCovered("ResolvedReferenceType 18");
         return false;
     }
 
