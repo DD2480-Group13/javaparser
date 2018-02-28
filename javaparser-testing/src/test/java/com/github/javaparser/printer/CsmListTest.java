@@ -27,6 +27,7 @@ public class CsmListTest {
 
     @Test
     public void testPreeceding() {
+        //Contract: Ensures that the branch for preceeding is reached indicated by CsmMock::prettyPrint is called
         ObservableProperty prop = Mockito.mock(ObservableProperty.class);
         Mockito.when(prop.isAboutNodes()).thenReturn(true);
         CsmMock preceeding = new CsmMock();
@@ -40,6 +41,7 @@ public class CsmListTest {
 
     @Test
     public void testFollowing() {
+        //Contract: Ensures that the branch for following is reached indicated by CsmMock::prettyPrint is called
         ObservableProperty prop = Mockito.mock(ObservableProperty.class);
         Mockito.when(prop.isAboutNodes()).thenReturn(false);
         CsmMock following = new CsmMock();
@@ -53,6 +55,7 @@ public class CsmListTest {
 
     @Test
     public void testSeparatorPre() {
+        //Contract: Ensures that the branch for separatorPre is reached indicated by CsmMock::prettyPrint is called
         ObservableProperty prop = Mockito.mock(ObservableProperty.class);
         Mockito.when(prop.isAboutNodes()).thenReturn(false);
         CsmMock separatorPre = new CsmMock();
@@ -66,6 +69,7 @@ public class CsmListTest {
 
     @Test
     public void testEmptyPrint() {
+        //Contract: Ensures that prettyPrint is not called because of empty nodeList, CsmMock::prettyPrint is not called
         ObservableProperty prop = Mockito.mock(ObservableProperty.class);
         Mockito.when(prop.isAboutNodes()).thenReturn(false);
         CsmMock preceeding = new CsmMock();
