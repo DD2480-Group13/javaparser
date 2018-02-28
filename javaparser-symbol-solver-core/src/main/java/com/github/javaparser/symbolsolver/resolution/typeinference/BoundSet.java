@@ -1,5 +1,6 @@
 package com.github.javaparser.symbolsolver.resolution.typeinference;
 
+import com.github.javaparser.coveragetool.CoverageTool;
 import com.github.javaparser.resolution.types.ResolvedReferenceType;
 import com.github.javaparser.resolution.types.ResolvedType;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
@@ -187,6 +188,7 @@ public class BoundSet {
     }
 
     public BoundSet deriveImpliedBounds(TypeSolver typeSolver) {
+        CoverageTool.makeCovered("deriveImpliedBounds 1");
         // As bound sets are constructed and grown during inference, it is possible that new bounds can be inferred
         // based on the assertions of the original bounds. The process of incorporation identifies these new bounds
         // and adds them to the bound set.
@@ -224,16 +226,28 @@ public class BoundSet {
 
         newConstraintsSet = forEachPairSameAs((a, b, currentConstraintSet) -> {
             if (areSameTypeInference(a.getS(), b.getS())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 2");
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSameAsType(a.getT(), b.getT()));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 3");
             }
             if (areSameTypeInference(a.getS(), b.getT())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 4");
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSameAsType(a.getS(), b.getT()));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 5");
             }
             if (areSameTypeInference(a.getT(), b.getS())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 6");
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSameAsType(a.getT(), b.getS()));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 7");
             }
             if (areSameTypeInference(a.getT(), b.getT())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 8");
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSameAsType(a.getS(), b.getS()));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 9");
             }
             return currentConstraintSet;
         }, newConstraintsSet);
@@ -242,10 +256,16 @@ public class BoundSet {
 
         newConstraintsSet = forEachPairSameAndSubtype((a, b, currentConstraintSet) -> {
             if (areSameTypeInference(a.getS(), b.getS())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 10");
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSubtypeOfType(typeSolver, a.getT(), b.getT()));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 11");
             }
             if (areSameTypeInference(a.getT(), b.getS())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 12");
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSubtypeOfType(typeSolver, a.getS(), b.getT()));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 13");
             }
             return currentConstraintSet;
         }, newConstraintsSet);
@@ -254,10 +274,16 @@ public class BoundSet {
 
         newConstraintsSet = forEachPairSameAndSubtype((a, b, currentConstraintSet) -> {
             if (areSameTypeInference(a.getS(), b.getT())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 14");
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSubtypeOfType(typeSolver, b.getS(), a.getT()));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 15");
             }
             if (areSameTypeInference(a.getT(), b.getT())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 16");
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSubtypeOfType(typeSolver, b.getS(), a.getS()));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 17");
             }
             return currentConstraintSet;
         }, newConstraintsSet);
@@ -266,7 +292,10 @@ public class BoundSet {
 
         newConstraintsSet = forEachPairSubtypeAndSubtype((a, b, currentConstraintSet) -> {
             if (areSameTypeInference(a.getT(), b.getS())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 18");
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSubtypeOfType(typeSolver, b.getS(), a.getT()));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 19");
             }
             return currentConstraintSet;
         }, newConstraintsSet);
@@ -275,36 +304,48 @@ public class BoundSet {
 
         newConstraintsSet = forEachPairSameAs((a, b, currentConstraintSet) -> {
             if (isInferenceVariable(a.getS()) && isProperType(a.getT())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 20");
                 InferenceVariable alpha = (InferenceVariable)a.getS();
                 ResolvedType U = a.getT();
                 ResolvedType S = b.getS();
                 ResolvedType T = b.getT();
                 Substitution sub = Substitution.empty().withPair(alpha.getTypeParameterDeclaration(), U);
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSameAsType(sub.apply(S), sub.apply(T)));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 21");
             }
             if (isInferenceVariable(a.getT()) && isProperType(a.getS())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 22");
                 InferenceVariable alpha = (InferenceVariable)a.getT();
                 ResolvedType U = a.getS();
                 ResolvedType S = b.getS();
                 ResolvedType T = b.getT();
                 Substitution sub = Substitution.empty().withPair(alpha.getTypeParameterDeclaration(), U);
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSameAsType(sub.apply(S), sub.apply(T)));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 23");
             }
             if (isInferenceVariable(b.getS()) && isProperType(b.getT())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 24");
                 InferenceVariable alpha = (InferenceVariable)b.getS();
                 ResolvedType U = b.getT();
                 ResolvedType S = a.getS();
                 ResolvedType T = a.getT();
                 Substitution sub = Substitution.empty().withPair(alpha.getTypeParameterDeclaration(), U);
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSameAsType(sub.apply(S), sub.apply(T)));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 25");
             }
             if (isInferenceVariable(b.getT()) && isProperType(b.getS())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 26");
                 InferenceVariable alpha = (InferenceVariable)b.getT();
                 ResolvedType U = b.getS();
                 ResolvedType S = a.getS();
                 ResolvedType T = a.getT();
                 Substitution sub = Substitution.empty().withPair(alpha.getTypeParameterDeclaration(), U);
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSameAsType(sub.apply(S), sub.apply(T)));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 27");
             }
             return currentConstraintSet;
         }, newConstraintsSet);
@@ -313,20 +354,26 @@ public class BoundSet {
 
         newConstraintsSet = forEachPairSameAndSubtype((a, b, currentConstraintSet) -> {
             if (isInferenceVariable(a.getS()) && isProperType(a.getT())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 28");
                 InferenceVariable alpha = (InferenceVariable)a.getS();
                 ResolvedType U = a.getT();
                 ResolvedType S = b.getS();
                 ResolvedType T = b.getT();
                 Substitution sub = Substitution.empty().withPair(alpha.getTypeParameterDeclaration(), U);
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSubtypeOfType(typeSolver, sub.apply(S), sub.apply(T)));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 29");
             }
             if (isInferenceVariable(a.getT()) && isProperType(a.getS())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 30");
                 InferenceVariable alpha = (InferenceVariable)a.getT();
                 ResolvedType U = a.getS();
                 ResolvedType S = b.getS();
                 ResolvedType T = b.getT();
                 Substitution sub = Substitution.empty().withPair(alpha.getTypeParameterDeclaration(), U);
                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSubtypeOfType(typeSolver, sub.apply(S), sub.apply(T)));
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 31");
             }
             return currentConstraintSet;
         }, newConstraintsSet);
@@ -338,20 +385,31 @@ public class BoundSet {
 
         newConstraintsSet = forEachPairSubtypeAndSubtype((a, b, currentConstraintSet) -> {
             if (isInferenceVariable(a.getS()) && isInferenceVariable(b.getS())) {
+                CoverageTool.makeCovered("deriveImpliedBounds 32");
                 if (a.getT().isReferenceType() && b.getT().isReferenceType()) {
+                    CoverageTool.makeCovered("deriveImpliedBounds 33");
                     ResolvedReferenceType S = a.getT().asReferenceType();
                     ResolvedReferenceType T = b.getT().asReferenceType();
                     List<Pair<ResolvedReferenceType, ResolvedReferenceType>> pairs = findPairsOfCommonAncestors(S, T);
                     for (Pair<ResolvedReferenceType, ResolvedReferenceType> pair : pairs) {
+                        CoverageTool.makeCovered("deriveImpliedBounds 34");
                         for (int i=0;i<Math.min(pair.a.typeParametersValues().size(), pair.b.typeParametersValues().size()); i++) {
+                            CoverageTool.makeCovered("deriveImpliedBounds 35");
                             ResolvedType si = pair.a.typeParametersValues().get(i);
                             ResolvedType ti = pair.b.typeParametersValues().get(i);
                             if (!si.isWildcard() && !ti.isWildcard()) {
+                                CoverageTool.makeCovered("deriveImpliedBounds 36");
                                 currentConstraintSet = currentConstraintSet.withConstraint(new TypeSameAsType(si, ti));
+                            } else {
+                                CoverageTool.makeCovered("deriveImpliedBounds 37");
                             }
                         }
                     }
+                } else {
+                    CoverageTool.makeCovered("deriveImpliedBounds 38");
                 }
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 39");
             }
             return currentConstraintSet;
         }, newConstraintsSet);
@@ -362,6 +420,7 @@ public class BoundSet {
         // implied and new constraint formulas may be implied, as follows.
 
         for (Bound b : this.bounds.stream().filter(b -> b instanceof CapturesBound).collect(Collectors.toList())) {
+            CoverageTool.makeCovered("deriveImpliedBounds 40");
             CapturesBound capturesBound = (CapturesBound)b;
 
             throw new UnsupportedOperationException();
@@ -405,11 +464,16 @@ public class BoundSet {
         }
 
         if (newConstraintsSet.isEmpty()) {
+            CoverageTool.makeCovered("deriveImpliedBounds 41");
             return this;
         } else {
+            CoverageTool.makeCovered("deriveImpliedBounds 42");
             BoundSet newBounds = newConstraintsSet.reduce(typeSolver);
             if (newBounds.isEmpty()) {
+                CoverageTool.makeCovered("deriveImpliedBounds 43");
                 return this;
+            } else {
+                CoverageTool.makeCovered("deriveImpliedBounds 44");
             }
             return this.incorporate(newBounds, typeSolver);
         }
