@@ -3,6 +3,8 @@ package com.github.javaparser.coveragetool;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class CoverageTool {
     private static final HashMap<String, Boolean> coverage = new HashMap<>();
@@ -28,11 +30,12 @@ public class CoverageTool {
     }
 
     public static void writeToFile() throws IOException {
-        String[] keys = new String[coverage.size()];
-        keys = coverage.keySet().toArray(keys);
+        SortedSet<String> keys = new TreeSet<>(coverage.keySet());
         FileWriter writer = new FileWriter(outFile);
-        for(int i=0; i < keys.length; i++) {
-            writer.write((i+1) + ": " + keys[i] + "\n");
+        int i = 0;
+        for(String key : keys) {
+            writer.write((i+1) + ": " + key + "\n");
+            i++;
         }
         writer.close();
     }
