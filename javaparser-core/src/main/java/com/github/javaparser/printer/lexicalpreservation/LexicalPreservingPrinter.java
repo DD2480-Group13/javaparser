@@ -467,7 +467,8 @@ public class LexicalPreservingPrinter {
         return (optionalArgument.getTypeName().startsWith(NodeList.class.getCanonicalName()));
     }
 
-    private static ObservableProperty findNodeListName(NodeList nodeList) {
+    // Visible for testing
+    static ObservableProperty findNodeListName(NodeList nodeList) {
         Node parent = nodeList.getParentNodeForChildren();
         for (Method m : parent.getClass().getMethods()) {
             if (m.getParameterCount() == 0 && m.getReturnType().getCanonicalName().equals(NodeList.class.getCanonicalName())) {
