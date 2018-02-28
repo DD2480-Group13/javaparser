@@ -6,7 +6,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="coveragetool" />
         <module name="javaparser-core" />
         <module name="javaparser-core-generators" />
         <module name="javaparser-metamodel-generator" />
@@ -18,7 +17,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
-      <module name="coveragetool" target="1.8" />
       <module name="javaparser-core" target="1.8" />
       <module name="javaparser-core-generators" target="1.8" />
       <module name="javaparser-metamodel-generator" target="1.8" />
