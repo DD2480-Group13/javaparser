@@ -317,7 +317,7 @@ public class MethodCallExprContext extends AbstractJavaParserContext<MethodCallE
             makeCovered("MethodCallExprContext 22");
             return;
         }
-        makeCovered("MethodCallExprContext 22");
+        makeCovered("MethodCallExprContext 23");
         throw new RuntimeException(source.describe() + " " + target.describe());
     }
 
